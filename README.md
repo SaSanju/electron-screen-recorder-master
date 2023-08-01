@@ -10,7 +10,5 @@
 # Download
 Available for Mac, Linux and Windows.
 
-[Check the latest release](https://github.com/daltonmenezes/electron-screen-recorder/releases/latest)
-
 # License
 [MIT License](/LICENSE)
