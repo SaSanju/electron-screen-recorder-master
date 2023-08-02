@@ -20,18 +20,21 @@ module.exports = async function selectSource(source) {
 
   const videostream = await navigator.mediaDevices.getUserMedia(constraints);
 
-  const audiostream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const audioInputDevices = devices.filter((device) => device.kind === 'audioinput');
 
-  [videoTrack] = videostream.getVideoTracks();
-  [audioTrack] = audiostream.getAudioTracks();
+  let stream;
+  if (audioInputDevices && audioInputDevices.length > 0) {
+    const audiostream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+    [videoTrack] = videostream.getVideoTracks();
+    [audioTrack] = audiostream.getAudioTracks();
 
-  //combining them into one stream
-  const stream = new MediaStream([audioTrack, videoTrack]);
+    //combining them into one stream
+    stream = new MediaStream([audioTrack, videoTrack]);
 
-  // const stream =
-  //   await navigator
-  //     .mediaDevices
-  //     .getUserMedia(constraints)
+  } else {
+    stream = videostream;
+  }
 
   videoElement.srcObject = stream
   videoElement.play()
